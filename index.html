@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow Matrix Rain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<script>
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars =
+"アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&";
+
+const letters = chars.split("");
+
+const fontSize = 18;
+const columns = Math.floor(canvas.width / fontSize);
+
+const drops = [];
+
+for (let i = 0; i < columns; i++) {
+    drops[i] = Math.random() * canvas.height;
+}
+
+let hue = 120;
+
+function draw() {
+
+    // Fundo com transparência para criar o rastro
+    ctx.fillStyle = "rgba(0,0,0,0.05)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.font = fontSize + "px monospace";
+
+    for(let i=0;i<drops.length;i++){
+
+        const text = letters[Math.floor(Math.random()*letters.length)];
+
+        // Cada coluna recebe uma cor diferente
+        const color = (hue + i * 8) % 360;
+
+        ctx.fillStyle = `hsl(${color},100%,60%)`;
+
+        ctx.fillText(text, i * fontSize, drops[i]);
+
+        if(drops[i] > canvas.height && Math.random() > 0.975){
+            drops[i] = 0;
+        }
+
+        drops[i] += fontSize;
+    }
+
+    // Faz todas as cores girarem continuamente
+    hue += 0.5;
+}
+
+setInterval(draw, 35);
+
+window.addEventListener("resize", () => {
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+});
+</script>
+
+</body>
+</html>
